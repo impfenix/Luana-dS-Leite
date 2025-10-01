@@ -1,0 +1,187 @@
+/* Estilos Gerais */
+body {
+    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #1c1e21;
+}
+
+/* Container Principal */
+.container-principal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 1600px;
+    align-items: flex-start; /* Alinha os containers no topo */
+}
+
+/* Estilo para cada seção */
+.container-estrutura {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+}
+
+/* Ajuste nas larguras dos containers */
+#fila-container { width: 55%; min-width: 550px; }
+#cpp-code-container { width: 40%; min-width: 450px; flex-grow: 1; }
+
+.container-estrutura h2 {
+    text-align: center;
+    color: #0056b3;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+
+/* --- ESTILOS PARA FILA CIRCULAR --- */
+
+.visualizacao-fila-circular {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 10px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    min-height: 150px;
+}
+
+.slot-fila {
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #adb5bd;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.bloco-brinquedo {
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: inset 0 -4px 8px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1);
+    animation: aparecer 0.4s ease-out;
+}
+@keyframes aparecer { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1.0); opacity: 1; } }
+
+.bloco-brinquedo.cor-1 { background-color: #d9534f; }
+.bloco-brinquedo.cor-2 { background-color: #5bc0de; }
+.bloco-brinquedo.cor-3 { background-color: #f0ad4e; }
+.bloco-brinquedo.cor-4 { background-color: #5cb85c; }
+.bloco-brinquedo.cor-5 { background-color: #6c757d; }
+
+.ponteiro {
+    position: absolute;
+    bottom: -35px;
+    font-weight: bold;
+    font-size: 18px;
+    animation: fadeIn 0.3s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.ponteiro.inicio { color: #28a745; }
+.ponteiro.fim { color: #dc3545; }
+.ponteiro::before { content: '↑'; display: block; text-align: center; }
+
+.estado-fila { margin-top: 45px; padding-top: 15px; border-top: 2px solid #f0f2f5; }
+#estado-container { display: flex; justify-content: space-around; font-size: 1.2em; }
+#estado-container span strong { font-size: 1.5em; margin-left: 8px; }
+
+/* --- ESTILOS PARA CONTROLES MANUAIS --- */
+
+#fila-container hr {
+    margin: 25px 0;
+    border: none;
+    border-top: 2px solid #f0f2f5;
+}
+
+.controles-manuais {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.coluna-controle {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.coluna-controle h3 {
+    text-align: center;
+    margin-top: 0;
+    color: #495057;
+}
+
+.coluna-controle button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: left;
+}
+
+.coluna-controle button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo específico para o botão de remoção */
+.coluna-controle:last-child button {
+    background-color: #dc3545;
+}
+.coluna-controle:last-child button:hover {
+    background-color: #c82333;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.input-group input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Estilo para o painel de código C++ */
+#cpp-code-container pre {
+    background-color: #272822; /* Cor de fundo do tema Okaidia do Prism */
+    border-radius: 8px;
+    padding: 1.2em;
+    overflow-x: auto;
+    height: 100%;
+    position: relative;
+}
