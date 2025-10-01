@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Depurador Interativo de Fila Circular</title>
+    <title>Comparador de Filas: Circular, Estática e Dinâmica</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-highlight/prism-line-highlight.min.css" rel="stylesheet" />
@@ -11,28 +11,37 @@
 <body>
 
     <header>
-        <h1>Depurador Interativo de Fila Circular com C++</h1>
+        <h1>Comparador de Implementações de Fila com C++</h1>
+        <div class="queue-selector">
+            <button id="select-circular" class="selector-btn active">Fila Circular</button>
+            <button id="select-estatica" class="selector-btn">Fila Estática</button>
+            <button id="select-dinamica" class="selector-btn">Fila Dinâmica</button>
+        </div>
     </header>
 
     <main class="container-principal">
         
         <section class="container-estrutura" id="fila-container">
-            <h2>Fila Circular Interativa (FIFO)</h2>
-            <p>Execute cada passo do algoritmo manualmente usando os botões.</p>
+            <h2 id="fila-titulo">Fila Circular</h2>
+            <p id="fila-descricao">Ocupa um vetor de tamanho fixo, mas reutiliza o espaço ao tratar o fim do vetor como conectado ao início.</p>
             
-            <div class="visualizacao-fila-circular" id="queue-visualizacao">
-                <div class="slot-fila" data-index="0"></div>
-                <div class="slot-fila" data-index="1"></div>
-                <div class="slot-fila" data-index="2"></div>
-                <div class="slot-fila" data-index="3"></div>
-                <div class="slot-fila" data-index="4"></div>
+            <div id="visualizacoes-container">
+                <div class="visualizacao" id="fila-fixa-vis">
+                    <div class="slot-fila" data-index="0"></div>
+                    <div class="slot-fila" data-index="1"></div>
+                    <div class="slot-fila" data-index="2"></div>
+                    <div class="slot-fila" data-index="3"></div>
+                    <div class="slot-fila" data-index="4"></div>
+                </div>
+                <div class="visualizacao hidden" id="fila-dinamica-vis">
+                    </div>
             </div>
 
             <div class="estado-fila">
                 <div id="estado-container">
-                    <span>Início (I): <strong id="estado-i">0</strong></span>
-                    <span>Fim (F): <strong id="estado-f">0</strong></span>
-                    <span>Qt: <strong id="estado-qt">0</strong></span>
+                    <span>Início (I): <strong id="estado-i">-</strong></span>
+                    <span>Fim (F): <strong id="estado-f">-</strong></span>
+                    <span>Qt: <strong id="estado-qt">-</strong></span>
                 </div>
             </div>
 
@@ -41,73 +50,26 @@
             <div class="controles-manuais">
                 <div class="coluna-controle">
                     <h3>Processo de Inserção</h3>
-                    <button id="btn-verificar-cheia">1. Verificar se está Cheia</button>
+                    <button id="btn-verificar-cheia">1. Verificar se pode Inserir</button>
                     <div class="input-group">
                         <input type="text" id="queue-input" placeholder="Valor">
-                        <button id="btn-inserir-valor">2. Inserir Valor em `dados[F]`</button>
+                        <button id="btn-inserir-valor">2. Inserir Valor</button>
                     </div>
-                    <button id="btn-atualizar-fim">3. Atualizar Fim (F) e Qt</button>
+                    <button id="btn-atualizar-fim">3. Atualizar Ponteiros</button>
                 </div>
                 <div class="coluna-controle">
                     <h3>Processo de Remoção</h3>
-                    <button id="btn-verificar-vazia">1. Verificar se está Vazia</button>
-                    <button id="btn-remover-valor">2. Remover Valor de `dados[I]`</button>
-                    <button id="btn-atualizar-inicio">3. Atualizar Início (I) e Qt</button>
+                    <button id="btn-verificar-vazia">1. Verificar se pode Remover</button>
+                    <button id="btn-remover-valor">2. Remover Valor</button>
+                    <button id="btn-atualizar-inicio">3. Atualizar Ponteiros</button>
                 </div>
             </div>
-
         </section>
 
         <section class="container-estrutura" id="cpp-code-container">
             <h2>Código C++ Correspondente</h2>
             <pre><code class="language-cpp" id="cpp-code">
-// FilaCircular.cpp
-#include &lt;iostream&gt;
-
-class FilaCircular {
-private:
-    int *dados;
-    int inicio, fim, qt, MAX;
-
-public:
-    FilaCircular(int tamanho) { /* ... */ }
-    ~FilaCircular() { /* ... */ }
-
-    bool estaVazia() {
-        return qt == 0;
-    }
-    bool estaCheia() {
-        return qt == MAX;
-    }
-
-    // Função para inserir um elemento na fila
-    void inserir(int valor) {
-        // Passo 1: Verificação
-        if (estaCheia()) { return; }
-
-        // Passo 2: Inserir o dado
-        dados[fim] = valor;
-
-        // Passo 3: Atualizar ponteiros
-        fim = (fim + 1) % MAX;
-        qt++;
-    }
-
-    // Função para remover um elemento da fila
-    void remover() {
-        // Passo 1: Verificação
-        if (estaVazia()) { return; }
-
-        // Passo 2: Remover o dado (simulado)
-        // Em C++, apenas moveríamos o ponteiro 'inicio'.
-        // O valor antigo permanece, mas é inacessível.
-
-        // Passo 3: Atualizar ponteiros
-        inicio = (inicio + 1) % MAX;
-        qt--;
-    }
-};
-            </code></pre>
+                </code></pre>
         </section>
     </main>
 
