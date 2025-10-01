@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depurador Interativo de Fila Circular</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-highlight/prism-line-highlight.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <header>
+        <h1>Depurador Interativo de Fila Circular com C++</h1>
+    </header>
+
+    <main class="container-principal">
+        
+        <section class="container-estrutura" id="fila-container">
+            <h2>Fila Circular Interativa (FIFO)</h2>
+            <p>Execute cada passo do algoritmo manualmente usando os botões.</p>
+            
+            <div class="visualizacao-fila-circular" id="queue-visualizacao">
+                <div class="slot-fila" data-index="0"></div>
+                <div class="slot-fila" data-index="1"></div>
+                <div class="slot-fila" data-index="2"></div>
+                <div class="slot-fila" data-index="3"></div>
+                <div class="slot-fila" data-index="4"></div>
+            </div>
+
+            <div class="estado-fila">
+                <div id="estado-container">
+                    <span>Início (I): <strong id="estado-i">0</strong></span>
+                    <span>Fim (F): <strong id="estado-f">0</strong></span>
+                    <span>Qt: <strong id="estado-qt">0</strong></span>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="controles-manuais">
+                <div class="coluna-controle">
+                    <h3>Processo de Inserção</h3>
+                    <button id="btn-verificar-cheia">1. Verificar se está Cheia</button>
+                    <div class="input-group">
+                        <input type="text" id="queue-input" placeholder="Valor">
+                        <button id="btn-inserir-valor">2. Inserir Valor em `dados[F]`</button>
+                    </div>
+                    <button id="btn-atualizar-fim">3. Atualizar Fim (F) e Qt</button>
+                </div>
+                <div class="coluna-controle">
+                    <h3>Processo de Remoção</h3>
+                    <button id="btn-verificar-vazia">1. Verificar se está Vazia</button>
+                    <button id="btn-remover-valor">2. Remover Valor de `dados[I]`</button>
+                    <button id="btn-atualizar-inicio">3. Atualizar Início (I) e Qt</button>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="container-estrutura" id="cpp-code-container">
+            <h2>Código C++ Correspondente</h2>
+            <pre><code class="language-cpp" id="cpp-code">
+// FilaCircular.cpp
+#include &lt;iostream&gt;
+
+class FilaCircular {
+private:
+    int *dados;
+    int inicio, fim, qt, MAX;
+
+public:
+    FilaCircular(int tamanho) { /* ... */ }
+    ~FilaCircular() { /* ... */ }
+
+    bool estaVazia() {
+        return qt == 0;
+    }
+    bool estaCheia() {
+        return qt == MAX;
+    }
+
+    // Função para inserir um elemento na fila
+    void inserir(int valor) {
+        // Passo 1: Verificação
+        if (estaCheia()) { return; }
+
+        // Passo 2: Inserir o dado
+        dados[fim] = valor;
+
+        // Passo 3: Atualizar ponteiros
+        fim = (fim + 1) % MAX;
+        qt++;
+    }
+
+    // Função para remover um elemento da fila
+    void remover() {
+        // Passo 1: Verificação
+        if (estaVazia()) { return; }
+
+        // Passo 2: Remover o dado (simulado)
+        // Em C++, apenas moveríamos o ponteiro 'inicio'.
+        // O valor antigo permanece, mas é inacessível.
+
+        // Passo 3: Atualizar ponteiros
+        inicio = (inicio + 1) % MAX;
+        qt--;
+    }
+};
+            </code></pre>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
