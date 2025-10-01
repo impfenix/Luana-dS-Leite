@@ -3,36 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizador de Estruturas de Dados</title>
+    <title>Visualizador de Estruturas de Dados com C++</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
 </head>
 <body>
 
     <header>
-        <h1>Estruturas de Dados: Pilha vs. Fila Circular</h1>
+        <h1>Visualizador de Fila Circular: Interação + Código C++</h1>
     </header>
 
     <main class="container-principal">
-        <section class="container-estrutura">
-            <h2>Pilha (Stack) - LIFO</h2>
-            <p><strong>LIFO</strong>: O último a entrar é o primeiro a sair.</p>
-            <div class="controles">
-                <input type="text" id="stack-input" placeholder="Valor do bloco">
-                <button id="stack-push">Adicionar (Push)</button>
-                <button id="stack-pop">Remover (Pop)</button>
-            </div>
-            <div class="visualizacao" id="stack-visualizacao">
-                </div>
-        </section>
-
-        <section class="container-estrutura">
-            <h2>Fila Circular (Tamanho Fixo) - FIFO</h2>
-            <p>Implementação baseada em um vetor de tamanho <strong>MAX = 5</strong>.</p>
-            <div class="controles">
-                <input type="text" id="queue-input" placeholder="Valor para inserir">
-                <button id="queue-enqueue">Inserir (Fim)</button>
-                <button id="queue-dequeue">Remover (Início)</button>
-            </div>
+        
+        <section class="container-estrutura" id="fila-container">
+            <h2>Fila Circular Interativa (FIFO)</h2>
+            <p>Interaja com os blocos e veja o código C++ correspondente ser destacado ao lado.</p>
             
             <div class="visualizacao-fila-circular" id="queue-visualizacao">
                 <div class="slot-fila" data-index="0"></div>
@@ -43,16 +28,77 @@
             </div>
 
             <div class="estado-fila">
-                <h3>Estado da Fila:</h3>
                 <div id="estado-container">
                     <span>Início (I): <strong id="estado-i">0</strong></span>
                     <span>Fim (F): <strong id="estado-f">0</strong></span>
                     <span>Qt: <strong id="estado-qt">0</strong></span>
                 </div>
             </div>
+
+            <hr>
+
+            <h3>Adicionar Bloco Manualmente</h3>
+            <div class="controles">
+                <input type="text" id="queue-input" placeholder="Valor do bloco">
+                <button id="queue-enqueue-btn">Inserir com Botão</button>
+            </div>
+        </section>
+
+        <section class="container-estrutura" id="cpp-code-container">
+            <h2>Código C++ Correspondente</h2>
+            <pre><code class="language-cpp" id="cpp-code">
+// FilaCircular.cpp
+#include &lt;iostream&gt;
+
+class FilaCircular {
+private:
+    int *dados;
+    int inicio, fim, qt, MAX;
+
+public:
+    FilaCircular(int tamanho) {
+        MAX = tamanho;
+        dados = new int[MAX];
+        inicio = 0;
+        fim = 0;
+        qt = 0;
+    }
+
+    ~FilaCircular() {
+        delete[] dados;
+    }
+
+    bool estaVazia() { return qt == 0; }
+    bool estaCheia() { return qt == MAX; }
+
+    // Função para inserir um elemento na fila
+    void inserir(int valor) {
+        if (estaCheia()) {
+            std::cout << "ERRO: Fila cheia!\n";
+            return;
+        }
+        dados[fim] = valor;
+        fim = (fim + 1) % MAX;
+        qt++;
+    }
+
+    // Função para remover um elemento da fila
+    void remover() {
+        if (estaVazia()) {
+            std::cout << "ERRO: Fila vazia!\n";
+            return;
+        }
+        // Em uma implementação real, retornaríamos dados[inicio]
+        inicio = (inicio + 1) % MAX;
+        qt--;
+    }
+};
+            </code></pre>
         </section>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
