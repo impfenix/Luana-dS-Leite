@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizador de Pilha e Fila</title>
+    <title>Visualizador de Estruturas de Dados</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <header>
-        <h1>Estruturas de Dados: Pilha vs. Fila</h1>
+        <h1>Estruturas de Dados: Pilha vs. Fila Circular</h1>
     </header>
 
     <main class="container-principal">
         <section class="container-estrutura">
             <h2>Pilha (Stack) - LIFO</h2>
-            <p><strong>LIFO</strong>: Last-In, First-Out (O último a entrar é o primeiro a sair).</p>
+            <p><strong>LIFO</strong>: O último a entrar é o primeiro a sair.</p>
             <div class="controles">
                 <input type="text" id="stack-input" placeholder="Valor do bloco">
                 <button id="stack-push">Adicionar (Push)</button>
@@ -26,15 +26,30 @@
         </section>
 
         <section class="container-estrutura">
-            <h2>Fila (Queue) - FIFO</h2>
-            <p><strong>FIFO</strong>: First-In, First-Out (O primeiro a entrar é o primeiro a sair).</p>
+            <h2>Fila Circular (Tamanho Fixo) - FIFO</h2>
+            <p>Implementação baseada em um vetor de tamanho <strong>MAX = 5</strong>.</p>
             <div class="controles">
-                <input type="text" id="queue-input" placeholder="Valor do bloco">
-                <button id="queue-enqueue">Adicionar (Enqueue)</button>
-                <button id="queue-dequeue">Remover (Dequeue)</button>
+                <input type="text" id="queue-input" placeholder="Valor para inserir">
+                <button id="queue-enqueue">Inserir (Fim)</button>
+                <button id="queue-dequeue">Remover (Início)</button>
             </div>
-            <div class="visualizacao" id="queue-visualizacao">
+            
+            <div class="visualizacao-fila-circular" id="queue-visualizacao">
+                <div class="slot-fila" data-index="0"></div>
+                <div class="slot-fila" data-index="1"></div>
+                <div class="slot-fila" data-index="2"></div>
+                <div class="slot-fila" data-index="3"></div>
+                <div class="slot-fila" data-index="4"></div>
+            </div>
+
+            <div class="estado-fila">
+                <h3>Estado da Fila:</h3>
+                <div id="estado-container">
+                    <span>Início (I): <strong id="estado-i">0</strong></span>
+                    <span>Fim (F): <strong id="estado-f">0</strong></span>
+                    <span>Qt: <strong id="estado-qt">0</strong></span>
                 </div>
+            </div>
         </section>
     </main>
 
