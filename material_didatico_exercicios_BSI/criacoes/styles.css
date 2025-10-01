@@ -1,6 +1,6 @@
 /* Estilos Gerais */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #f0f2f5;
     color: #333;
     margin: 0;
@@ -23,17 +23,17 @@ header {
     justify-content: center;
     gap: 40px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
 }
 
 /* Estilo para cada seção (Pilha e Fila) */
 .container-estrutura {
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 45%;
-    min-width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    width: 48%;
+    min-width: 400px;
     display: flex;
     flex-direction: column;
 }
@@ -44,12 +44,6 @@ header {
     border-bottom: 2px solid #f0f2f5;
     padding-bottom: 10px;
     margin-top: 0;
-}
-
-.container-estrutura p {
-    text-align: center;
-    font-style: italic;
-    color: #555;
 }
 
 /* Controles (Input e Botões) */
@@ -63,14 +57,14 @@ header {
     flex-grow: 1;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
 }
 
 .controles button {
     padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: #007bff;
     color: white;
     font-size: 14px;
@@ -82,30 +76,19 @@ header {
     background-color: #0056b3;
 }
 
-/* Área de Visualização */
-.visualizacao {
+/* --- ESTILOS DA PILHA (ANTIGO) --- */
+#stack-visualizacao {
     border: 2px dashed #ccc;
     border-radius: 5px;
     min-height: 300px;
     padding: 10px;
     display: flex;
     gap: 10px;
-}
-
-/* Visualização específica da Pilha (vertical) */
-#stack-visualizacao {
-    flex-direction: column-reverse; /* Empilha de baixo para cima */
+    flex-direction: column-reverse;
     align-items: center;
 }
 
-/* Visualização específica da Fila (horizontal) */
-#queue-visualizacao {
-    flex-direction: row;
-    align-items: flex-end; /* Alinha na base */
-}
-
-/* Estilo dos Blocos */
-.bloco {
+#stack-visualizacao .bloco { /* Bloco simples para a pilha */
     width: 60px;
     height: 60px;
     background-color: #28a745;
@@ -116,18 +99,98 @@ header {
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    animation: aparecer 0.4s ease;
 }
 
-/* Animação de entrada dos blocos */
+
+/* --- NOVOS ESTILOS PARA FILA CIRCULAR --- */
+
+/* Container da Fila com slots */
+.visualizacao-fila-circular {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 10px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    min-height: 150px;
+}
+
+/* Slots individuais da fila */
+.slot-fila {
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #adb5bd;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Para posicionar os ponteiros */
+}
+
+/* Estilo do "Bloco de Brinquedo" */
+.bloco-brinquedo {
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: inset 0 -4px 8px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1);
+    animation: aparecer 0.4s ease-out;
+    transform: scale(1.0);
+}
+
+/* Cores dos blocos */
+.bloco-brinquedo.cor-1 { background-color: #d9534f; } /* Vermelho */
+.bloco-brinquedo.cor-2 { background-color: #5bc0de; } /* Azul claro */
+.bloco-brinquedo.cor-3 { background-color: #f0ad4e; } /* Laranja */
+.bloco-brinquedo.cor-4 { background-color: #5cb85c; } /* Verde */
+.bloco-brinquedo.cor-5 { background-color: #6c757d; } /* Cinza */
+
+
 @keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1.0); opacity: 1; }
+}
+
+/* Ponteiros I (Início) e F (Fim) */
+.ponteiro {
+    position: absolute;
+    bottom: -35px; /* Posição abaixo do slot */
+    font-weight: bold;
+    font-size: 18px;
+    animation: fadeIn 0.3s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.ponteiro.inicio {
+    color: #28a745;
+}
+
+.ponteiro.fim {
+    color: #dc3545;
+}
+
+.ponteiro::before {
+    content: '↑';
+    display: block;
+    text-align: center;
+}
+
+/* Mostrador de estado da fila */
+.estado-fila {
+    margin-top: 45px;
+    padding-top: 15px;
+    border-top: 2px solid #f0f2f5;
+}
+#estado-container {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2em;
+}
+#estado-container span strong {
+    font-size: 1.5em;
+    margin-left: 8px;
 }
