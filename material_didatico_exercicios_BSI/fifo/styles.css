@@ -16,13 +16,22 @@ header {
     width: 100%;
 }
 
-/* --- ESTILOS DO SELETOR DE FILA --- */
-.queue-selector {
+/* --- ESTILOS DOS SELETORES --- */
+.selectors-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
     margin-top: 15px;
+}
+.queue-selector, .code-selector {
     padding: 8px;
     background-color: #e9ecef;
     border-radius: 12px;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 .selector-btn {
     padding: 10px 20px;
