@@ -12,8 +12,17 @@ public:
     FilaCircular(int t) { MAX = t; /*...*/ }
     bool estaVazia() { return qt == 0; }
     bool estaCheia() { return qt == MAX; }
-    void inserir(int v) { /*...*/ }
-    void remover() { /*...*/ }
+    void inserir(int v) {
+        if (estaCheia()) { return; }
+        dados[fim] = v;
+        fim = (fim + 1) % MAX;
+        qt++;
+    }
+    void remover() {
+        if (estaVazia()) { return; }
+        inicio = (inicio + 1) % MAX;
+        qt--;
+    }
 };`,
             estatica: `
 // Implementação com STRUCT
@@ -25,8 +34,15 @@ public:
     FilaEstatica(int t) { MAX = t; /*...*/ }
     bool estaVazia() { return inicio == fim; }
     bool estaCheia() { return fim == MAX; }
-    void inserir(int v) { /*...*/ }
-    void remover() { /*...*/ }
+    void inserir(int v) {
+        if (estaCheia()) { return; }
+        dados[fim] = v;
+        fim++;
+    }
+    void remover() {
+        if (estaVazia()) { return; }
+        inicio++;
+    }
 };`,
             dinamica: `
 // Nó da lista, com struct
@@ -39,8 +55,24 @@ private:
 public:
     FilaDinamica() { /*...*/ }
     bool estaVazia() { return inicio == nullptr; }
-    void inserir(int v) { /*...*/ }
-    void remover() { /*...*/ }
+    void inserir(int v) {
+        No* novoNo = new No;
+        novoNo->dado = v;
+        novoNo->proximo = nullptr;
+        if (estaVazia()) {
+            inicio = novoNo;
+        } else {
+            fim->proximo = novoNo;
+        }
+        fim = novoNo;
+    }
+    void remover() {
+        if (estaVazia()) { return; }
+        No* temp = inicio;
+        inicio = inicio->proximo;
+        if (inicio == nullptr) { fim = nullptr; }
+        delete temp;
+    }
 };`
         },
         class: {
@@ -54,8 +86,17 @@ public:
     FilaCircular(int t) { MAX = t; /*...*/ }
     bool estaVazia() { return qt == 0; }
     bool estaCheia() { return qt == MAX; }
-    void inserir(int v) { /*...*/ }
-    void remover() { /*...*/ }
+    void inserir(int v) {
+        if (estaCheia()) { return; }
+        dados[fim] = v;
+        fim = (fim + 1) % MAX;
+        qt++;
+    }
+    void remover() {
+        if (estaVazia()) { return; }
+        inicio = (inicio + 1) % MAX;
+        qt--;
+    }
 };`,
             estatica: `
 // Implementação com CLASS
@@ -67,8 +108,15 @@ public:
     FilaEstatica(int t) { MAX = t; /*...*/ }
     bool estaVazia() { return inicio == fim; }
     bool estaCheia() { return fim == MAX; }
-    void inserir(int v) { /*...*/ }
-    void remover() { /*...*/ }
+    void inserir(int v) {
+        if (estaCheia()) { return; }
+        dados[fim] = v;
+        fim++;
+    }
+    void remover() {
+        if (estaVazia()) { return; }
+        inicio++;
+    }
 };`,
             dinamica: `
 // Nó da lista, com struct
@@ -81,8 +129,24 @@ private:
 public:
     FilaDinamica() { /*...*/ }
     bool estaVazia() { return inicio == nullptr; }
-    void inserir(int v) { /*...*/ }
-    void remover() { /*...*/ }
+    void inserir(int v) {
+        No* novoNo = new No;
+        novoNo->dado = v;
+        novoNo->proximo = nullptr;
+        if (estaVazia()) {
+            inicio = novoNo;
+        } else {
+            fim->proximo = novoNo;
+        }
+        fim = novoNo;
+    }
+    void remover() {
+        if (estaVazia()) { return; }
+        No* temp = inicio;
+        inicio = inicio->proximo;
+        if (inicio == nullptr) { fim = nullptr; }
+        delete temp;
+    }
 };`
         }
     };
@@ -99,30 +163,24 @@ public:
     const cppCodeElement = document.getElementById('cpp-code');
     const queueSelectorBtns = document.querySelectorAll('.queue-selector button');
     const codeSelectorBtns = document.querySelectorAll('.code-selector button');
-    // ... (restante dos botões de controle)
-
+    const btnVerificarCheia = document.getElementById('btn-verificar-cheia'), btnInserirValor = document.getElementById('btn-inserir-valor'), btnAtualizarFim = document.getElementById('btn-atualizar-fim');
+    const btnVerificarVazia = document.getElementById('btn-verificar-vazia'), btnRemoverValor = document.getElementById('btn-remover-valor'), btnAtualizarInicio = document.getElementById('btn-atualizar-inicio');
+    
     // --- ESTADO GLOBAL ---
     let currentQueueType = 'circular';
     let currentCodeType = 'struct';
     const MAX = 5;
     let dados, inicio, fim, qt;
     let highlightTimeout;
-    
-    // --- FUNÇÃO PRINCIPAL DE SETUP ---
+
+    // --- FUNÇÕES DE CONTROLE ---
     function setup() {
-        // Atualiza UI dos seletores
         queueSelectorBtns.forEach(btn => btn.classList.toggle('active', btn.id === `select-${currentQueueType}`));
         codeSelectorBtns.forEach(btn => btn.classList.toggle('active', btn.id === `select-${currentCodeType}`));
-        
-        // Atualiza visualização (fixa vs. dinâmica)
         visFixa.classList.toggle('hidden', currentQueueType === 'dinamica');
         visDinamica.classList.toggle('hidden', currentQueueType !== 'dinamica');
-        
-        // Injeta o código C++ correto
         cppCodeElement.textContent = cppCodes[currentCodeType][currentQueueType];
         Prism.highlightAll();
-
-        // Atualiza títulos e descrições
         const titulos = { circular: 'Fila Circular', estatica: 'Fila Estática', dinamica: 'Fila Dinâmica' };
         const descricoes = {
             circular: 'Ocupa um vetor de tamanho fixo, mas reutiliza o espaço ao tratar o fim do vetor como conectado ao início.',
@@ -131,10 +189,8 @@ public:
         };
         filaTitulo.textContent = titulos[currentQueueType];
         filaDescricao.textContent = descricoes[currentQueueType];
-        
-        // Reseta o estado da fila
         if (currentQueueType === 'dinamica') {
-            dados = []; // Usaremos um array para simular a lista encadeada
+            dados = [];
             inicio = null; fim = null;
         } else {
             dados = new Array(MAX).fill(null);
@@ -143,33 +199,112 @@ public:
         qt = 0;
         render();
     }
-
-    // --- DEMAIS FUNÇÕES (render, highlight, lógica de botões) ---
-    // (O restante do seu código JavaScript da resposta anterior pode ser colado aqui,
-    // pois a lógica interna dos botões e da renderização não muda, apenas a forma
-    // como o estado inicial e o código são selecionados pela função setup)
-
-    // A lógica de renderização e dos botões permanece a mesma, pois ela opera
-    // nas variáveis globais (dados, inicio, fim, qt), que são corretamente
-    // inicializadas pela função setup().
     
-    // Cole aqui o restante do seu script.js da resposta anterior, começando da função
-    // highlightCode() até o final do arquivo.
+    function highlightCode(lines) {
+        clearTimeout(highlightTimeout);
+        cppCodeBlock.removeAttribute('data-line');
+        setTimeout(() => {
+            cppCodeBlock.setAttribute('data-line', lines);
+            Prism.highlightAll();
+            highlightTimeout = setTimeout(() => {
+                 cppCodeBlock.removeAttribute('data-line');
+                 Prism.highlightAll();
+            }, 3000);
+        }, 50);
+    }
     
-    // --- INICIALIZAÇÃO ---
-    queueSelectorBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            currentQueueType = btn.id.replace('select-', '');
-            setup();
+    // --- FUNÇÕES DE RENDERIZAÇÃO ---
+    function render() {
+        if (currentQueueType === 'dinamica') renderDinamica();
+        else renderFixa();
+    }
+
+    function renderFixa() {
+        slots.forEach((slot, index) => {
+            slot.innerHTML = '';
+            if (dados[index] !== null) {
+                const bloco = document.createElement('div');
+                bloco.classList.add('bloco-brinquedo', `cor-${(parseInt(dados[index]) % 5) + 1}`);
+                bloco.textContent = dados[index];
+                slot.appendChild(bloco);
+            }
         });
+        document.querySelectorAll('.ponteiro').forEach(p => p.remove());
+        const isEstaticaVazia = currentQueueType === 'estatica' && inicio === fim;
+        const isCircularVazia = currentQueueType === 'circular' && qt === 0;
+        if (!isEstaticaVazia && !isCircularVazia) {
+             const pI = document.createElement('div'); pI.classList.add('ponteiro', 'inicio'); pI.textContent = 'I'; slots[inicio].appendChild(pI);
+        }
+        if ((currentQueueType === 'estatica' && fim < MAX) || currentQueueType === 'circular') {
+            const pF = document.createElement('div'); pF.classList.add('ponteiro', 'fim'); pF.textContent = 'F'; slots[fim].appendChild(pF);
+        }
+        estadoI.textContent = inicio; estadoF.textContent = fim;
+        estadoQt.textContent = (currentQueueType === 'circular') ? qt : fim - inicio;
+    }
+
+    function renderDinamica() {
+        visDinamica.innerHTML = '';
+        dados.forEach((nodeValue, index) => {
+            const noDiv = document.createElement('div'); noDiv.className = 'no-dinamico';
+            const bloco = document.createElement('div');
+            bloco.classList.add('bloco-brinquedo', `cor-${(parseInt(nodeValue) % 5) + 1}`);
+            bloco.textContent = nodeValue;
+            noDiv.appendChild(bloco);
+            if (index < dados.length - 1) {
+                const seta = document.createElement('div'); seta.className = 'seta-dinamica';
+                noDiv.appendChild(seta);
+            }
+            visDinamica.appendChild(noDiv);
+        });
+        if (dados.length === 0) {
+            const nullText = document.createElement('span'); nullText.className = 'null-pointer';
+            nullText.textContent = 'nullptr'; visDinamica.appendChild(nullText);
+        }
+        estadoI.textContent = (dados.length > 0) ? `[${dados[0]}]` : 'null';
+        estadoF.textContent = (dados.length > 0) ? `[${dados[dados.length-1]}]` : 'null';
+        estadoQt.textContent = dados.length;
+    }
+    
+    // --- LÓGICA DOS BOTÕES DE CONTROLE ---
+    btnVerificarCheia.addEventListener('click', () => {
+        let isFull = false;
+        if (currentQueueType === 'circular') { isFull = qt === MAX; highlightCode('9'); }
+        if (currentQueueType === 'estatica') { isFull = fim === MAX; highlightCode('10'); }
+        if (currentQueueType === 'dinamica') { isFull = false; highlightCode('12'); alert("VERIFICADO: Fila dinâmica não tem limite de tamanho!"); return; }
+        alert(isFull ? "VERIFICADO: A fila está cheia!" : "VERIFICADO: A fila tem espaço.");
     });
 
-    codeSelectorBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            currentCodeType = btn.id.replace('select-', '');
-            setup();
-        });
+    btnInserirValor.addEventListener('click', () => {
+        const valor = queueInput.value.trim();
+        if (!valor) { alert("Digite um valor."); return; }
+        if (currentQueueType === 'circular') {
+            if (qt === MAX) { alert("ERRO: Fila cheia."); return; }
+            highlightCode('12'); dados[fim] = valor;
+        } else if (currentQueueType === 'estatica') {
+            if (fim === MAX) { alert("ERRO: Fila cheia."); return; }
+            highlightCode('13'); dados[fim] = valor;
+        } else if (currentQueueType === 'dinamica') {
+            highlightCode('15-17'); dados.push(valor);
+        }
+        render();
     });
 
-    setup(); // Inicia a aplicação
-});
+    btnAtualizarFim.addEventListener('click', () => {
+        if (currentQueueType === 'circular') {
+            if (qt < MAX && dados[fim] !== null) {
+                highlightCode('13-14'); fim = (fim + 1) % MAX; qt++;
+            } else { alert("Insira um valor antes de atualizar."); return; }
+        } else if (currentQueueType === 'estatica') {
+            if (fim < MAX && dados[fim] !== null) {
+                highlightCode('14'); fim++;
+            } else { alert("Insira um valor antes de atualizar."); return; }
+        } else if (currentQueueType === 'dinamica') {
+            highlightCode('18-23');
+        }
+        queueInput.value = '';
+        render();
+    });
+
+    btnVerificarVazia.addEventListener('click', () => {
+        let isEmpty = false;
+        if (currentQueueType === 'circular') { isEmpty
