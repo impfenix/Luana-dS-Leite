@@ -12,8 +12,7 @@ body {
 
 header {
     text-align: center;
-    margin-bottom: 30px;
-    color: #1c1e21;
+    margin-bottom: 20px;
 }
 
 /* Container Principal */
@@ -21,22 +20,21 @@ header {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 40px;
+    gap: 30px;
     width: 100%;
     max-width: 1400px;
 }
 
-/* Estilo para cada seção (Pilha e Fila) */
+/* Estilo para cada seção */
 .container-estrutura {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     padding: 25px;
-    width: 48%;
-    min-width: 400px;
-    display: flex;
-    flex-direction: column;
 }
+
+#fila-container { width: 60%; min-width: 600px; }
+#interacao-container { width: 30%; min-width: 300px; }
 
 .container-estrutura h2 {
     text-align: center;
@@ -46,65 +44,8 @@ header {
     margin-top: 0;
 }
 
-/* Controles (Input e Botões) */
-.controles {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
+/* --- ESTILOS DA FILA CIRCULAR --- */
 
-.controles input[type="text"] {
-    flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-.controles button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.controles button:hover {
-    background-color: #0056b3;
-}
-
-/* --- ESTILOS DA PILHA (ANTIGO) --- */
-#stack-visualizacao {
-    border: 2px dashed #ccc;
-    border-radius: 5px;
-    min-height: 300px;
-    padding: 10px;
-    display: flex;
-    gap: 10px;
-    flex-direction: column-reverse;
-    align-items: center;
-}
-
-#stack-visualizacao .bloco { /* Bloco simples para a pilha */
-    width: 60px;
-    height: 60px;
-    background-color: #28a745;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-}
-
-
-/* --- NOVOS ESTILOS PARA FILA CIRCULAR --- */
-
-/* Container da Fila com slots */
 .visualizacao-fila-circular {
     display: flex;
     justify-content: space-around;
@@ -112,9 +53,15 @@ header {
     background-color: #e9ecef;
     border-radius: 8px;
     min-height: 150px;
+    border: 3px dashed transparent;
+    transition: border-color 0.3s ease;
 }
 
-/* Slots individuais da fila */
+/* Efeito visual ao arrastar sobre a fila */
+.visualizacao-fila-circular.drag-over {
+    border-color: #007bff;
+}
+
 .slot-fila {
     width: 80px;
     height: 80px;
@@ -123,10 +70,9 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative; /* Para posicionar os ponteiros */
+    position: relative;
 }
 
-/* Estilo do "Bloco de Brinquedo" */
 .bloco-brinquedo {
     width: 100%;
     height: 100%;
@@ -138,59 +84,101 @@ header {
     align-items: center;
     border-radius: 10px;
     box-shadow: inset 0 -4px 8px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.1);
-    animation: aparecer 0.4s ease-out;
-    transform: scale(1.0);
+    cursor: grab;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.bloco-brinquedo:active { cursor: grabbing; }
+
+/* Efeito visual no bloco sendo arrastado */
+.bloco-brinquedo.dragging {
+    opacity: 0.5;
+    transform: scale(0.9);
 }
 
-/* Cores dos blocos */
-.bloco-brinquedo.cor-1 { background-color: #d9534f; } /* Vermelho */
-.bloco-brinquedo.cor-2 { background-color: #5bc0de; } /* Azul claro */
-.bloco-brinquedo.cor-3 { background-color: #f0ad4e; } /* Laranja */
-.bloco-brinquedo.cor-4 { background-color: #5cb85c; } /* Verde */
-.bloco-brinquedo.cor-5 { background-color: #6c757d; } /* Cinza */
 
+.cor-1 { background-color: #d9534f; }
+.cor-2 { background-color: #5bc0de; }
+.cor-3 { background-color: #f0ad4e; }
+.cor-4 { background-color: #5cb85c; }
+.cor-5 { background-color: #6c757d; }
 
-@keyframes aparecer {
-    from { transform: scale(0.5); opacity: 0; }
-    to { transform: scale(1.0); opacity: 1; }
-}
-
-/* Ponteiros I (Início) e F (Fim) */
 .ponteiro {
     position: absolute;
-    bottom: -35px; /* Posição abaixo do slot */
+    bottom: -35px;
     font-weight: bold;
     font-size: 18px;
-    animation: fadeIn 0.3s;
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.ponteiro.inicio { color: #28a745; }
+.ponteiro.fim { color: #dc3545; }
+.ponteiro::before { content: '↑'; display: block; text-align: center; }
 
-.ponteiro.inicio {
-    color: #28a745;
-}
+.estado-fila { margin-top: 45px; padding-top: 15px; border-top: 2px solid #f0f2f5; }
+#estado-container { display: flex; justify-content: space-around; font-size: 1.2em; }
+#estado-container span strong { font-size: 1.5em; margin-left: 8px; }
 
-.ponteiro.fim {
-    color: #dc3545;
-}
-
-.ponteiro::before {
-    content: '↑';
-    display: block;
-    text-align: center;
-}
-
-/* Mostrador de estado da fila */
-.estado-fila {
-    margin-top: 45px;
-    padding-top: 15px;
-    border-top: 2px solid #f0f2f5;
-}
-#estado-container {
+/* --- NOVOS ESTILOS PARA INTERAÇÃO --- */
+#paleta-blocos {
     display: flex;
-    justify-content: space-around;
-    font-size: 1.2em;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 10px;
 }
-#estado-container span strong {
-    font-size: 1.5em;
-    margin-left: 8px;
+
+#area-remocao {
+    margin-top: 15px;
+    width: 100%;
+    min-height: 100px;
+    border: 3px dashed #dc3545;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4em;
+    color: #dc3545;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Efeito visual ao arrastar sobre a lixeira */
+#area-remocao.drag-over {
+    background-color: #f8d7da;
+    color: white;
+}
+/* ... (Mantenha todos os estilos anteriores) ... */
+
+/* Estilos para o container principal se ajustar melhor */
+.container-principal {
+    align-items: flex-start; /* Alinha os containers no topo */
+}
+
+/* Ajuste nas larguras dos containers */
+#fila-container { width: 55%; min-width: 550px; }
+#cpp-code-container { width: 40%; min-width: 450px; flex-grow: 1; }
+
+/* Estilo para o painel de código C++ */
+#cpp-code-container pre {
+    background-color: #272822; /* Cor de fundo do tema Okaidia do Prism */
+    border-radius: 8px;
+    padding: 1.2em;
+    overflow-x: auto;
+    height: 100%;
+}
+
+/* Classe para destacar a linha de código */
+.line-highlight {
+    display: block;
+    background-color: rgba(255, 235, 59, 0.25); /* Amarelo semi-transparente */
+    border-left: 4px solid #fdd835; /* Borda amarela */
+    margin: 0 -1.2em; /* Compensa o padding do <pre> */
+    padding: 0 1em;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Ajuste no container de interação (que não existe mais) */
+#interacao-container { display: none; } /* Escondido para dar espaço ao código */
+
+/* Ajustes no layout dos controles de inserção manual */
+#fila-container hr {
+    margin: 25px 0;
+    border: 1px solid #f0f2f5;
 }
