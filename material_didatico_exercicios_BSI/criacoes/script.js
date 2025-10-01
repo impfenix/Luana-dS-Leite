@@ -1,155 +1,146 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- LÓGICA DA PILHA (SEM ALTERAÇÕES) ---
-    const stackInput = document.getElementById('stack-input');
-    const stackPushBtn = document.getElementById('stack-push');
-    const stackPopBtn = document.getElementById('stack-pop');
-    const stackVisualizacao = document.getElementById('stack-visualizacao');
-    let stack = [];
-
-    const renderStack = () => {
-        stackVisualizacao.innerHTML = '';
-        stack.forEach(item => {
-            const bloco = document.createElement('div');
-            bloco.classList.add('bloco');
-            bloco.textContent = item;
-            stackVisualizacao.appendChild(bloco);
-        });
-    };
-    stackPushBtn.addEventListener('click', () => {
-        const valor = stackInput.value.trim();
-        if (valor) {
-            stack.push(valor);
-            stackInput.value = '';
-            renderStack();
-        }
-    });
-    stackPopBtn.addEventListener('click', () => {
-        if (stack.length > 0) {
-            stack.pop();
-            renderStack();
-        }
-    });
-
-    // --- NOVA LÓGICA DA FILA CIRCULAR ---
+    // --- LÓGICA DA FILA CIRCULAR COM DESTAQUE DE CÓDIGO ---
 
     // Elementos da DOM
-    const queueInput = document.getElementById('queue-input');
-    const queueEnqueueBtn = document.getElementById('queue-enqueue');
-    const queueDequeueBtn = document.getElementById('queue-dequeue');
+    const queueVisualizacao = document.getElementById('queue-visualizacao');
     const slots = document.querySelectorAll('.slot-fila');
-
-    // Elementos do mostrador de estado
     const estadoI = document.getElementById('estado-i');
     const estadoF = document.getElementById('estado-f');
     const estadoQt = document.getElementById('estado-qt');
+    const queueInput = document.getElementById('queue-input');
+    const queueEnqueueBtn = document.getElementById('queue-enqueue-btn');
+    const cppCode = document.getElementById('cpp-code');
 
-    // Variáveis de estado da Fila, como no quadro
+    // Variáveis de estado da Fila
     const MAX = 5;
-    let dados = new Array(MAX).fill(null); // O vetor 'dados'
-    let inicio = 0; // Ponteiro 'I'
-    let fim = 0;    // Ponteiro 'F'
-    let qt = 0;     // Contador 'qt'
+    let dados = new Array(MAX).fill(null);
+    let inicio = 0, fim = 0, qt = 0;
+    
+    // --- NOVA FUNÇÃO PARA DESTACAR CÓDIGO ---
+    let highlightTimeout;
+    const highlightCode = (functionName) => {
+        // Limpa destaques anteriores e timeouts
+        clearTimeout(highlightTimeout);
+        const highlightedElements = cppCode.querySelectorAll('.line-highlight');
+        highlightedElements.forEach(el => el.classList.remove('line-highlight'));
 
-    // Função para renderizar (desenhar) o estado da fila na tela
+        if (!functionName) return;
+
+        // Mapeia o nome da função para o texto no código
+        const functionMap = {
+            'inserir': 'void inserir(int valor)',
+            'remover': 'void remover()'
+        };
+        const searchText = functionMap[functionName];
+        if (!searchText) return;
+
+        // Encontra as linhas da função e adiciona a classe de destaque
+        const codeLines = cppCode.innerHTML.split('\n');
+        let inFunction = false;
+        let braceCount = 0;
+        const newHtml = codeLines.map(line => {
+            if (line.includes(searchText)) {
+                inFunction = true;
+                braceCount = (line.match(/{/g) || []).length;
+                return `<span class="line-highlight">${line}</span>`;
+            }
+            if (inFunction) {
+                braceCount += (line.match(/{/g) || []).length;
+                braceCount -= (line.match(/}/g) || []).length;
+                if (braceCount <= 0) {
+                    inFunction = false;
+                }
+                return `<span class="line-highlight">${line}</span>`;
+            }
+            return line;
+        }).join('\n');
+        
+        cppCode.innerHTML = newHtml;
+
+        // Remove o destaque após um tempo
+        highlightTimeout = setTimeout(() => {
+            const highlighted = cppCode.querySelectorAll('.line-highlight');
+            highlighted.forEach(el => el.classList.remove('line-highlight'));
+        }, 2500); // Destaque dura 2.5 segundos
+    };
+
+    // Função de renderização (sem grandes mudanças)
     const renderQueue = () => {
-        // 1. Atualiza os blocos visuais
         slots.forEach((slot, index) => {
-            slot.innerHTML = ''; // Limpa o slot primeiro
-            
+            slot.innerHTML = '';
             if (dados[index] !== null) {
                 const bloco = document.createElement('div');
-                bloco.classList.add('bloco-brinquedo');
-                // Adiciona uma cor baseada no valor para ficar mais bonito
-                bloco.classList.add(`cor-${(parseInt(dados[index]) % 5) + 1}`);
+                bloco.classList.add('bloco-brinquedo', `cor-${(parseInt(dados[index]) % 5) + 1}`);
                 bloco.textContent = dados[index];
+                if (index === inicio && qt > 0) bloco.draggable = true;
                 slot.appendChild(bloco);
             }
         });
-
-        // 2. Atualiza os ponteiros I e F
-        // Remove ponteiros antigos antes de adicionar novos
         document.querySelectorAll('.ponteiro').forEach(p => p.remove());
-
-        if (qt > 0) { // Mostra o ponteiro de início se a fila não estiver vazia
-            const ponteiroInicio = document.createElement('div');
-            ponteiroInicio.classList.add('ponteiro', 'inicio');
-            ponteiroInicio.textContent = 'I';
-            slots[inicio].appendChild(ponteiroInicio);
+        if (qt > 0) {
+            const pI = document.createElement('div');
+            pI.classList.add('ponteiro', 'inicio');
+            pI.textContent = 'I';
+            slots[inicio].appendChild(pI);
         }
-
-        if (qt < MAX) { // Mostra o ponteiro de fim se a fila não estiver cheia
-            const ponteiroFim = document.createElement('div');
-            ponteiroFim.classList.add('ponteiro', 'fim');
-            ponteiroFim.textContent = 'F';
-            slots[fim].appendChild(ponteiroFim);
+        if (qt < MAX) {
+            const pF = document.createElement('div');
+            pF.classList.add('ponteiro', 'fim');
+            pF.textContent = 'F';
+            slots[fim].appendChild(pF);
         }
-
-        // 3. Atualiza os valores no painel de estado
         estadoI.textContent = inicio;
         estadoF.textContent = fim;
         estadoQt.textContent = qt;
     };
 
-    // Função de INSERÇÃO (Enqueue), como no quadro
+    // Função de INSERÇÃO (Enqueue) com chamada para destacar
     const enqueue = () => {
-        // "Verifica se a fila está cheia (qt == MAX)"
-        if (qt === MAX) {
-            alert("Fila cheia! Não é possível inserir.");
-            return;
-        }
-
         const valor = queueInput.value.trim();
         if (!valor) {
             alert("Por favor, digite um valor.");
             return;
         }
-
-        // "insere em dados[FIM] o valor"
-        dados[fim] = valor;
-        
-        // "atualiza fim (Fim++)" e a lógica circular
-        // "Se Fim == MAX => Fim = 0"
-        fim = (fim + 1) % MAX; // O operador '%' faz a lógica circular de forma simples
-
-        // "atualiza qt (qt++)"
-        qt++;
-
-        queueInput.value = '';
-        renderQueue(); // Redesenha a fila com os novos dados
-    };
-
-    // Função de REMOÇÃO (Dequeue), como no quadro
-    const dequeue = () => {
-        // "verifica se a fila está vazia (qt == 0)"
-        if (qt === 0) {
-            alert("Fila vazia! Não é possível remover.");
+        if (qt === MAX) {
+            alert("Fila cheia!");
+            highlightCode('inserir'); // Destaca mesmo se der erro, para mostrar a verificação
             return;
         }
-
-        // Remove o dado da posição 'inicio'
-        dados[inicio] = null;
-
-        // "atualiza I (I++)" e a lógica circular
-        // "Se I == MAX => I = 0"
-        inicio = (inicio + 1) % MAX;
-
-        // "atualiza qt (qt--)"
-        qt--;
-        
-        renderQueue(); // Redesenha a fila
+        dados[fim] = valor;
+        fim = (fim + 1) % MAX;
+        qt++;
+        queueInput.value = '';
+        renderQueue();
+        highlightCode('inserir'); // << DESTAQUE ACONTECE AQUI
     };
 
-    // Conecta as funções aos botões
-    queueEnqueueBtn.addEventListener('click', enqueue);
-    queueDequeueBtn.addEventListener('click', dequeue);
-    queueInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            enqueue();
+    // Função de REMOÇÃO (Dequeue) com chamada para destacar
+    const dequeue = () => {
+        if (qt === 0) {
+            alert("Fila vazia!");
+            highlightCode('remover'); // Destaca mesmo se der erro
+            return;
         }
+        dados[inicio] = null;
+        inicio = (inicio + 1) % MAX;
+        qt--;
+        renderQueue();
+        highlightCode('remover'); // << DESTAQUE ACONTECE AQUI
+    };
+
+    // Eventos dos botões
+    queueEnqueueBtn.addEventListener('click', enqueue);
+    queueInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') enqueue();
     });
 
-    // Renderiza o estado inicial da aplicação
-    renderStack();
+    // Simulação de remoção por um botão (já que o drag-and-drop foi removido)
+    // Para simplificar, vamos adicionar um botão de remoção
+    const dequeueBtn = document.createElement('button');
+    dequeueBtn.textContent = 'Remover com Botão';
+    dequeueBtn.addEventListener('click', dequeue);
+    queueEnqueueBtn.parentElement.appendChild(dequeueBtn);
+
+    // Renderiza o estado inicial
     renderQueue();
 });
