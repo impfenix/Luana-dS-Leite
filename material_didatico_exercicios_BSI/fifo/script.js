@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- MAPA DE CÓDIGOS C++ (COM STRUCT E CLASS) ---
+    // --- MAPA DE CÓDIGOS C++ (VERSÕES COMPLETAS E CORRIGIDAS) ---
     const cppCodes = {
         struct: {
             circular: `
@@ -9,12 +9,18 @@ private:
     int *dados;
     int inicio, fim, qt, MAX;
 public:
-    FilaCircular(int t) { MAX = t; /*...*/ }
+    FilaCircular(int tamanho) {
+        MAX = tamanho;
+        dados = new int[MAX];
+        inicio = 0; fim = 0; qt = 0;
+    }
+
     bool estaVazia() { return qt == 0; }
     bool estaCheia() { return qt == MAX; }
-    void inserir(int v) {
+
+    void inserir(int valor) {
         if (estaCheia()) { return; }
-        dados[fim] = v;
+        dados[fim] = valor;
         fim = (fim + 1) % MAX;
         qt++;
     }
@@ -31,12 +37,18 @@ private:
     int *dados;
     int inicio, fim, MAX;
 public:
-    FilaEstatica(int t) { MAX = t; /*...*/ }
+    FilaEstatica(int tamanho) {
+        MAX = tamanho;
+        dados = new int[MAX];
+        inicio = 0; fim = 0;
+    }
+
     bool estaVazia() { return inicio == fim; }
     bool estaCheia() { return fim == MAX; }
-    void inserir(int v) {
+
+    void inserir(int valor) {
         if (estaCheia()) { return; }
-        dados[fim] = v;
+        dados[fim] = valor;
         fim++;
     }
     void remover() {
@@ -46,18 +58,26 @@ public:
 };`,
             dinamica: `
 // Nó da lista, com struct
-struct No { int dado; No* proximo; };
+struct No {
+    int dado;
+    No* proximo;
+};
 
 // Fila com STRUCT
 struct FilaDinamica {
 private:
     No *inicio, *fim;
 public:
-    FilaDinamica() { /*...*/ }
+    FilaDinamica() {
+        inicio = nullptr;
+        fim = nullptr;
+    }
+
     bool estaVazia() { return inicio == nullptr; }
-    void inserir(int v) {
+
+    void inserir(int valor) {
         No* novoNo = new No;
-        novoNo->dado = v;
+        novoNo->dado = valor;
         novoNo->proximo = nullptr;
         if (estaVazia()) {
             inicio = novoNo;
@@ -70,7 +90,9 @@ public:
         if (estaVazia()) { return; }
         No* temp = inicio;
         inicio = inicio->proximo;
-        if (inicio == nullptr) { fim = nullptr; }
+        if (inicio == nullptr) {
+            fim = nullptr;
+        }
         delete temp;
     }
 };`
@@ -83,12 +105,18 @@ private:
     int *dados;
     int inicio, fim, qt, MAX;
 public:
-    FilaCircular(int t) { MAX = t; /*...*/ }
+    FilaCircular(int tamanho) {
+        MAX = tamanho;
+        dados = new int[MAX];
+        inicio = 0; fim = 0; qt = 0;
+    }
+
     bool estaVazia() { return qt == 0; }
     bool estaCheia() { return qt == MAX; }
-    void inserir(int v) {
+
+    void inserir(int valor) {
         if (estaCheia()) { return; }
-        dados[fim] = v;
+        dados[fim] = valor;
         fim = (fim + 1) % MAX;
         qt++;
     }
@@ -105,12 +133,18 @@ private:
     int *dados;
     int inicio, fim, MAX;
 public:
-    FilaEstatica(int t) { MAX = t; /*...*/ }
+    FilaEstatica(int tamanho) {
+        MAX = tamanho;
+        dados = new int[MAX];
+        inicio = 0; fim = 0;
+    }
+
     bool estaVazia() { return inicio == fim; }
     bool estaCheia() { return fim == MAX; }
-    void inserir(int v) {
+
+    void inserir(int valor) {
         if (estaCheia()) { return; }
-        dados[fim] = v;
+        dados[fim] = valor;
         fim++;
     }
     void remover() {
@@ -120,18 +154,26 @@ public:
 };`,
             dinamica: `
 // Nó da lista, com struct
-struct No { int dado; No* proximo; };
+struct No {
+    int dado;
+    No* proximo;
+};
 
 // Fila com CLASS
 class FilaDinamica {
 private:
     No *inicio, *fim;
 public:
-    FilaDinamica() { /*...*/ }
+    FilaDinamica() {
+        inicio = nullptr;
+        fim = nullptr;
+    }
+
     bool estaVazia() { return inicio == nullptr; }
-    void inserir(int v) {
+
+    void inserir(int valor) {
         No* novoNo = new No;
-        novoNo->dado = v;
+        novoNo->dado = valor;
         novoNo->proximo = nullptr;
         if (estaVazia()) {
             inicio = novoNo;
@@ -144,7 +186,9 @@ public:
         if (estaVazia()) { return; }
         No* temp = inicio;
         inicio = inicio->proximo;
-        if (inicio == nullptr) { fim = nullptr; }
+        if (inicio == nullptr) {
+            fim = nullptr;
+        }
         delete temp;
     }
 };`
@@ -268,9 +312,9 @@ public:
     // --- LÓGICA DOS BOTÕES DE CONTROLE ---
     btnVerificarCheia.addEventListener('click', () => {
         let isFull = false;
-        if (currentQueueType === 'circular') { isFull = qt === MAX; highlightCode('9'); }
-        if (currentQueueType === 'estatica') { isFull = fim === MAX; highlightCode('10'); }
-        if (currentQueueType === 'dinamica') { isFull = false; highlightCode('12'); alert("VERIFICADO: Fila dinâmica não tem limite de tamanho!"); return; }
+        if (currentQueueType === 'circular') { isFull = qt === MAX; highlightCode('16'); }
+        if (currentQueueType === 'estatica') { isFull = fim === MAX; highlightCode('16'); }
+        if (currentQueueType === 'dinamica') { isFull = false; alert("VERIFICADO: Fila dinâmica não tem limite de tamanho!"); return; }
         alert(isFull ? "VERIFICADO: A fila está cheia!" : "VERIFICADO: A fila tem espaço.");
     });
 
@@ -279,12 +323,12 @@ public:
         if (!valor) { alert("Digite um valor."); return; }
         if (currentQueueType === 'circular') {
             if (qt === MAX) { alert("ERRO: Fila cheia."); return; }
-            highlightCode('12'); dados[fim] = valor;
+            highlightCode('20'); dados[fim] = valor;
         } else if (currentQueueType === 'estatica') {
             if (fim === MAX) { alert("ERRO: Fila cheia."); return; }
-            highlightCode('13'); dados[fim] = valor;
+            highlightCode('20'); dados[fim] = valor;
         } else if (currentQueueType === 'dinamica') {
-            highlightCode('15-17'); dados.push(valor);
+            highlightCode('22-24'); dados.push(valor);
         }
         render();
     });
@@ -292,14 +336,14 @@ public:
     btnAtualizarFim.addEventListener('click', () => {
         if (currentQueueType === 'circular') {
             if (qt < MAX && dados[fim] !== null) {
-                highlightCode('13-14'); fim = (fim + 1) % MAX; qt++;
+                highlightCode('21-22'); fim = (fim + 1) % MAX; qt++;
             } else { alert("Insira um valor antes de atualizar."); return; }
         } else if (currentQueueType === 'estatica') {
             if (fim < MAX && dados[fim] !== null) {
-                highlightCode('14'); fim++;
+                highlightCode('21'); fim++;
             } else { alert("Insira um valor antes de atualizar."); return; }
         } else if (currentQueueType === 'dinamica') {
-            highlightCode('18-23');
+            highlightCode('25-30');
         }
         queueInput.value = '';
         render();
@@ -307,4 +351,49 @@ public:
 
     btnVerificarVazia.addEventListener('click', () => {
         let isEmpty = false;
-        if (currentQueueType === 'circular') { isEmpty
+        if (currentQueueType === 'circular') { isEmpty = qt === 0; highlightCode('15'); }
+        if (currentQueueType === 'estatica') { isEmpty = fim === inicio; highlightCode('15'); }
+        if (currentQueueType === 'dinamica') { isEmpty = dados.length === 0; highlightCode('18'); }
+        alert(isEmpty ? "VERIFICADO: A fila está vazia." : "VERIFICADO: A fila contém elementos.");
+    });
+    
+    btnRemoverValor.addEventListener('click', () => {
+        let isEmpty = (currentQueueType === 'circular') ? qt === 0 : (currentQueueType === 'estatica' ? inicio === fim : dados.length === 0);
+        if (isEmpty) { alert("ERRO: Fila vazia."); return; }
+        if (currentQueueType !== 'dinamica') dados[inicio] = null;
+        else highlightCode('35, 41');
+        render();
+    });
+
+    btnAtualizarInicio.addEventListener('click', () => {
+        if (currentQueueType === 'circular') {
+            if (qt > 0 && dados[inicio] === null) {
+                highlightCode('26-27'); inicio = (inicio + 1) % MAX; qt--;
+            } else { alert("Remova um valor antes de atualizar."); return; }
+        } else if (currentQueueType === 'estatica') {
+            if (inicio < fim && dados[inicio] === null) {
+                highlightCode('25'); inicio++;
+            } else { alert("Remova um valor antes de atualizar."); return; }
+        } else if (currentQueueType === 'dinamica') {
+             if (dados.length > 0) {
+                highlightCode('36-39'); dados.shift();
+             } else { alert("A fila já está vazia."); return; }
+        }
+        render();
+    });
+    
+    // --- INICIALIZAÇÃO ---
+    queueSelectorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentQueueType = btn.id.replace('select-', '');
+            setup();
+        });
+    });
+    codeSelectorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentCodeType = btn.id.replace('select-', '');
+            setup();
+        });
+    });
+    setup();
+});
