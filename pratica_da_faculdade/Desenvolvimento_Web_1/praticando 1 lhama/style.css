@@ -3,48 +3,57 @@
 
 /* Configurações gerais com unidades relativas */
 body {
-    background-color: #f0f0f0;
+    background-color: #fff;
     font-family: sans-serif;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Ocupa a altura inteira da tela */
+    padding: 2rem;
 }
 
-.container {
-    width: 90vw; /* O container ocupa 90% da largura da tela */
-    max-width: 1200px; /* Um limite máximo para telas muito grandes */
-    text-align: center;
-}
-
-h1 {
+h1.title {
     font-family: 'Lobster', cursive;
-    /* Fonte responsiva: mínimo de 2.5rem, preferencial de 8vw, máximo de 5rem */
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    color: #333;
+    font-size: clamp(2rem, 5vw, 3.5rem); /* Fonte responsiva */
+    color: #000;
+    margin: 0;
 }
 
-/* --- Layout da Grade de Lhamas --- */
-.lhama-grid {
-    display: grid;
-    /* Define 2 colunas: a primeira ocupa 2 frações do espaço, a segunda 1.
-       Isso já garante larguras diferentes.
-    */
-    grid-template-columns: 2fr 1fr; 
-    
-    /* Define 2 linhas: a primeira ocupa 1 fração da altura, a segunda 1.5.
-       Isso garante alturas diferentes.
-    */
-    grid-template-rows: 1fr 1.5fr;
-
-    gap: 2vw; /* Um espaçamento relativo entre as imagens */
+/* --- Container principal de cada seção --- */
+.lhama-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 3rem;
+    margin: 2rem 0;
 }
 
-.lhama-grid img {
-    width: 100%; /* A imagem ocupa 100% da largura da sua célula na grade */
-    height: 100%; /* A imagem ocupa 100% da altura da sua célula na grade */
-    object-fit: cover; /* Evita que a imagem fique distorcida */
-    border-radius: 1rem; /* Bordas arredondadas relativas */
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+/* --- Grupo de imagens --- */
+.image-group {
+    display: flex;
+    align-items: flex-end; /* Alinha as imagens pela base para o efeito de escada */
+    gap: 1.5vw; /* Espaçamento relativo entre as imagens */
 }
+
+/* --- Estilos da Seção Verde --- */
+.green-section {
+    background-color: #b7e4c7;
+    border-top: 0.5rem solid #1d3557;
+    border-bottom: 0.5rem solid #1d3557;
+}
+
+/* Tamanhos CRESCENTES com unidades relativas (vw) */
+.green-section .image-group img:nth-child(1) { height: 4vw; }
+.green-section .image-group img:nth-child(2) { height: 7vw; }
+.green-section .image-group img:nth-child(3) { height: 10vw; }
+.green-section .image-group img:nth-child(4) { height: 13vw; }
+
+
+/* --- Estilos da Seção Vermelha --- */
+.red-section {
+    background-color: #ffb3b3;
+    flex-direction: row-reverse; /* Inverte a ordem: título vai para a direita */
+}
+
+/* Tamanhos DECRESCENTES com unidades relativas (vw) */
+.red-section .image-group img:nth-child(1) { height: 10vw; }
+.red-section .image-group img:nth-child(2) { height: 7.5vw; }
+.red-section .image-group img:nth-child(3) { height: 5vw; }
+.red-section .image-group img:nth-child(4) { height: 3.5vw; }
