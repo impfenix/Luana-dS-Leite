@@ -1,0 +1,44 @@
+/* Importa a fonte Lobster do Google Fonts para o Praticando 2 */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+/* Estilização geral para espaçamento */
+body {
+    font-family: sans-serif;
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 40px;
+    padding: 15px;
+}
+
+/* --- Praticando 1: Seção 1 (Valores relativos) --- */
+.praticando1-relativos {
+    border: 1vh solid #888;          [cite_start]/* Borda: simples com 1 viewport height de largura [cite: 1442] */
+    font-size: 2vw;                  [cite_start]/* Tamanho da fonte: 2 viewport width [cite: 1442] */
+    width: 65%;                      [cite_start]/* Largura (do container): 65% [cite: 1442] */
+}
+
+/* --- Praticando 1: Seção 2 (Valores absolutos) --- */
+.praticando1-absolutos {
+    border: 6px solid #333;          [cite_start]/* Borda: simples com 6 pixels de largura [cite: 1444] */
+    font-size: 14pt;                 [cite_start]/* Tamanho da fonte: 14 pontos [cite: 1444] */
+    width: 620px;                    [cite_start]/* Largura (do container): 620 pixels [cite: 1444] */
+}
+
+/* --- Praticando 2: Lhama, lhama, lhama! --- */
+.praticando2-lhama {
+    text-align: center;
+}
+
+.praticando2-lhama h1 {
+    font-family: 'Lobster', cursive; [cite_start]/* Fonte: Lobster [cite: 1446] */
+    font-size: 4rem;
+    color: #c5630f;
+}
+
+.praticando2-lhama img {
+    max-width: 100%;                 [cite_start]/* Imagem da Lhama [cite: 1446] */
+    height: auto;
+    border-radius: 10px;
+}
