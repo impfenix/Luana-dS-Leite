@@ -1,0 +1,45 @@
+/* Estilos gerais para a página */
+body {
+    background-color: #f0fafa; /* Fundo verde-água bem claro */
+    font-family: serif; /* Fonte com serifa, como na imagem */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    padding: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+h2 {
+    font-size: 1.5em; /* Tamanho relativo ao container pai */
+}
+
+/* Estilo base para ambas as seções */
+section {
+    background-color: #ffffff; /* Fundo branco para o conteúdo */
+    margin-top: 2rem;
+    padding: 0.5em 1.5em 1.5em 1.5em;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave opcional */
+}
+
+/* Estilo para o texto destacado em amarelo */
+.highlight {
+    background-color: yellow;
+}
+
+/* --- Seção 1: Estilos com unidades RELATIVAS --- */
+.secao-relativa {
+    border: 1vh solid black; /* Borda com 1% da altura da tela [cite: 1442] */
+    width: 65%;              /* Largura de 65% [cite: 1442] */
+    font-size: 2vw;          /* Fonte com 2% da largura da tela [cite: 1442] */
+}
+
+/* --- Seção 2: Estilos com unidades ABSOLUTAS --- */
+.secao-absoluta {
+    border: 6px solid black; /* Borda com 6 pixels [cite: 1444] */
+    width: 620px;            /* Largura de 620 pixels [cite: 1444] */
+    font-size: 14pt;         /* Fonte com 14 pontos [cite: 1444] */
+}
