@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Recuperação de Boot UEFI e Correção de EDID</title>
+    <!-- Carregando o Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo para a fonte Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Importando a fonte Inter do Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 leading-relaxed">
+
+    <div class="max-w-3xl mx-auto p-6 md:p-10 bg-white shadow-lg rounded-lg my-10">
+
+        <h1 class="text-3xl font-bold text-blue-700 mb-8 border-b pb-4">Guia de Recuperação de Boot UEFI e Correção de Resolução</h1>
+
+        <!-- Parte 1: Criar Partição EFI -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-5">Parte 1: Criar Partição EFI (Modo Live)</h2>
+            <ol class="list-decimal list-inside space-y-4">
+                <li>Inicie pelo seu pendrive bootável em modo UEFI e escolha "Experimentar o Ubuntu".</li>
+                <li>Abra o GParted.</li>
+                <li>Selecione seu disco SSD (ex: <code>/dev/sda</code>).</li>
+                <li>Clique com o botão direito na sua partição principal do Ubuntu e escolha "Redimensionar/Mover".</li>
+                <li>Diminua o início da partição para liberar <code>550</code> MiB de espaço <em>antes</em> dela.</li>
+                <li>Clique no espaço "não alocado" de 550MiB.</li>
+                <li>
+                    Crie uma nova partição:
+                    <ul class="list-disc list-inside ml-6 mt-2 bg-gray-50 p-3 rounded-md">
+                        <li><strong>Sistema de arquivos:</strong> <code>fat32</code></li>
+                        <li><strong>Rótulo (Label):</strong> <code>EFI</code></li>
+                    </ul>
+                </li>
+                <li>Aplique todas as operações (clique no "V" verde).</li>
+                <li>Após a conclusão, clique com o botão direito na nova partição <code>fat32</code>.</li>
+                <li>Selecione "Gerenciar sinalizadores" (Manage Flags).</li>
+                <li>Marque as caixas <code>boot</code> e <code>esp</code>. Feche o GParted.</li>
+            </ol>
+        </section>
+
+        <!-- Parte 2: Instalar o GRUB-EFI e Aplicar a Correção -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-5">Parte 2: Instalar o GRUB-EFI e Aplicar a Correção (Modo Live)</h2>
+            <ol class="list-decimal list-inside space-y-4">
+                <li>Abra um terminal.</li>
+                <li>Identifique suas partições. (Use <code>lsblk</code> ou <code>sudo fdisk -l</code>). Assuma que a raiz do Ubuntu é <code>/dev/sda2</code> e a nova partição EFI é <code>/dev/sda1</code>. <strong>Ajuste os comandos se os números forem diferentes.</strong></li>
+                <li>
+                    Monte a partição raiz do seu sistema:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>sudo mount /dev/sda2 /mnt</code></pre>
+                </li>
+                <li>
+                    Monte a partição EFI:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>sudo mount /dev/sda1 /mnt/boot/efi</code></pre>
+                </li>
+                <li>
+                    Monte os diretórios do sistema:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>for i in /dev /dev/pts /proc /sys /run; do sudo mount -B $i /mnt$i; done</code></pre>
+                </li>
+                <li>
+                    Entre no ambiente <code>chroot</code>:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>sudo chroot /mnt</code></pre>
+                </li>
+                <li>
+                    Instale o GRUB para EFI:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu</code></pre>
+                </li>
+                <li>
+                    Edite o arquivo de configuração do GRUB:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>gedit /etc/default/grub</code></pre>
+                </li>
+                <li>
+                    Encontre a linha <code>GRUB_CMDLINE_LINUX_DEFAULT</code> e adicione o parâmetro da sua correção dentro das aspas. A linha deve ficar exatamente assim:
+                    <pre class="bg-gray-200 text-gray-800 p-3 rounded-md mt-2 overflow-x-auto"><code>GRUB_CMDLINE_LINUX_DEFAULT="quiet splash drm.edid_firmware=VGA-1:edid_corrigido.bin"</code></pre>
+                </li>
+                <li>Salve o arquivo e feche o gedit.</li>
+                <li>
+                    Atualize o GRUB (para aplicar a linha que você acabou de editar):
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>update-grub</code></pre>
+                </li>
+                <li>
+                    Atualize o initramfs (para carregar o arquivo <code>.bin</code> no boot):
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>update-initramfs -u</code></pre>
+                </li>
+                <li>
+                    Saia do chroot:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>exit</code></pre>
+                </li>
+                <li>
+                    Desmonte tudo:
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>sudo umount -R /mnt</code></pre>
+                </li>
+                <li>
+                    Reinicie o computador (e remova o pendrive):
+                    <pre class="bg-gray-900 text-white p-3 rounded-md mt-2 overflow-x-auto"><code>sudo reboot</code></pre>
+                </li>
+            </ol>
+        </section>
+
+    </div>
+
+</body>
+</html>
